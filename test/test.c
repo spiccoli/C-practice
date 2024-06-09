@@ -11,20 +11,22 @@ static void addone(int n) {
 int main(int argc, char const *argv[])
 {
     
-char vowels[5] = {'A', 'E', 'I', 'O', 'U'};
-char *pvowels = &vowels;
-int i;
+//char vowels[5] = {'A', 'E', 'I', 'O', 'U'};
+// char * vowels = "AEIOU";
+// char **pvowels = &vowels;
+//  int i;
 
-for (int i = 0; i < sizeof(vowels); i++)
-{
+// for (int i = 0; i < 5; i++)
+// {
 
-    printf("address of item %d itself: %p\n",i, &vowels[i]);
-    printf("address of the pointed item %d: %p\n", i, *&pvowels+i); // *&pvowels == pvowels
-    printf("item %d is: %c\n",i, *pvowels+i);
+//     printf("address of item %d itself: %p\n",i, &vowels+i);
+//     printf("address of the pointed item %d: %p\n", i, *&pvowels+i); // *&pvowels == pvowels
+//     printf("item %d is: %c\n",i, (*pvowels)[i]);
+//     printf("item %d is: %c\n",i, (vowels)[i]);
 
-}
+// }
 
-printf("adrress of the pointer %d itself: %p\n", i, &pvowels);
+// printf("adrress of the pointer %d itself: %p\n", i, &pvowels);
 
 // typedef struct 
 // {

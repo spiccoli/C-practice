@@ -6,13 +6,13 @@ mostrar por pantalla ambos vectores
 */
 
 #include <stdio.h>
-#define SIZE 5
+#define SIZE 2
 //funcion main
 int main(){
     // 0. variables
-    int vectorNumeros[SIZE] = {0};  
-    int vectorNumerosCuadrados[SIZE] = {0};  
-    int temp[SIZE] = {0};   
+    int vectorNumeros[SIZE]; 
+    int vectorNumerosCuadrados[SIZE]; 
+    int temp[SIZE];  
         // entrada
     for ( int i = 0 ; i < SIZE; i++)
     {

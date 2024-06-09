@@ -3,7 +3,7 @@
 
 int main(int argc, char const *argv[])
 {
-    char alumnos[SIZE][101] = {{0},{0}};
+    char * alumnos[SIZE][101] = {{0},{0}};
     double cuota[SIZE] = {0};
     
     for (int i = 0; i < SIZE; i++)

@@ -1,148 +1,126 @@
-/*
-Implementar un programa que permita gestionar los zombies en una
-granja de modo que estos sirvan para repeler a la horda.
-Se cuenta con 4 zonas a ocupar con máximos de capacidad definidos por el usuario, pero
-para ser seguras deben contar con un mínimo del 25% de su capacidad.
-
-A su vez cada zona necesita tener por lo menos dos personas a cargo
-que deben estar registradas con nombre, apellido, rol y zona asignada y
-por lo menos 1 persona con el rol de Mantenimiento para ser considerada
-segura.
-
-Los roles bajo este proyecto son 3:
-Mantenimiento, Seguridad y Mensajero.
-
-El menú debe ofrecer las siguientes opciones:
-1- Definir capacidad de zonas
-2- Crear Personas
-3- Asignar Personas
-4- Asignar zombies
-5- Imprimir todas los detalles de las personas
-6- Informar zonas que aún no son seguras
-*/
-
 #include <stdio.h>
-#define MAXCANTZONA 4
-#define MAXCANTPERSONA 3
+#include <stdlib.h>
+#include <string.h>
 
-typedef enum
-{
-    MANTENIMIENTO,
-    SEGURIDAD,
-    MENSAJERO,
-} Rol;
+#define MAX_PERSONAS 100
 
-typedef struct
-{
+typedef enum { MANTENIMIENTO, SEGURIDAD, MENSAJERO } Rol;
+
+typedef struct {
     char nombre[50];
     char apellido[50];
-    int idZona;
     Rol rol;
+    int zona_asignada;
 } Persona;
 
-typedef struct
-{
-    int capacidadZombies;
-    int cantZombies;
-    int contador;
-    Persona personas[MAXCANTPERSONA]; // 3
+typedef struct {
+    int capacidad_maxima;
+    int capacidad_actual;
+    int personas_a_cargo;
+    Persona personas[2];
 } Zona;
 
-// INICIO DE APLICACION
-void menu(Zona zonas[], Persona persona);
-void definirZonas(Zona zonas[]);
-void crearPersonas(Persona persona, Zona zonas[]);
+void definir_capacidad_zonas(Zona zonas[]) {
+    for (int i = 0; i < 4; i++) {
+        printf("Definir capacidad máxima para la zona %d: ", i + 1);
+        scanf("%d", &zonas[i].capacidad_maxima);
+        zonas[i].capacidad_actual = 0;
+        zonas[i].personas_a_cargo = 0;
+    }
+}
 
-int main(int argc, char const *argv[])
-{
-    Zona zonas[3];
-    Persona persona;
+void crear_persona(Persona personas[], int *total_personas) {
+    if (*total_personas >= MAX_PERSONAS) {
+        printf("No se pueden crear más personas.\n");
+        return;
+    }
+    Persona p;
+    printf("Nombre: ");
+    scanf("%s", p.nombre);
+    printf("Apellido: ");
+    scanf("%s", p.apellido);
+    printf("Rol (0: Mantenimiento, 1: Seguridad, 2: Mensajero): ");
+    scanf("%d", (int*)&p.rol);
+    p.zona_asignada = -1;
+    personas[(*total_personas)++] = p;
+}
 
-    menu(zonas, persona);
+void asignar_persona(Zona zonas[], Persona personas[], int total_personas) {
+    int id_persona, id_zona;
+    printf("ID de la persona a asignar: ");
+    scanf("%d", &id_persona);
+    printf("ID de la zona a asignar: ");
+    scanf("%d", &id_zona);
+    if (id_persona < 0 || id_persona >= total_personas || id_zona < 0 || id_zona >= 4) {
+        printf("ID inválido.\n");
+        return;
+    }
+    if (zonas[id_zona].personas_a_cargo >= 2) {
+        printf("La zona ya tiene el máximo de personas a cargo.\n");
+        return;
+    }
+    personas[id_persona].zona_asignada = id_zona;
+    zonas[id_zona].personas[zonas[id_zona].personas_a_cargo++] = personas[id_persona];
+}
+
+void asignar_zombies(Zona zonas[]) {
+    int id_zona, cantidad;
+    printf("ID de la zona: ");
+    scanf("%d", &id_zona);
+    printf("Cantidad de zombies a asignar: ");
+    scanf("%d", &cantidad);
+    if (id_zona < 0 || id_zona >= 4 || cantidad < 0 || zonas[id_zona].capacidad_actual + cantidad > zonas[id_zona].capacidad_maxima) {
+        printf("Asignación inválida.\n");
+        return;
+    }
+    zonas[id_zona].capacidad_actual += cantidad;
+}
+
+void imprimir_personas(Persona personas[], int total_personas) {
+    for (int i = 0; i < total_personas; i++) {
+        printf("Persona %d: %s %s, Rol: %d, Zona asignada: %d\n", i, personas[i].nombre, personas[i].apellido, personas[i].rol, personas[i].zona_asignada);
+    }
+}
+
+void informar_zonas_no_seguras(Zona zonas[]) {
+    for (int i = 0; i < 4; i++) {
+        int mantenimiento = 0;
+        for (int j = 0; j < zonas[i].personas_a_cargo; j++) {
+            if (zonas[i].personas[j].rol == MANTENIMIENTO) {
+                mantenimiento = 1;
+                break;
+            }
+        }
+        if (zonas[i].capacidad_actual < zonas[i].capacidad_maxima * 0.25 || zonas[i].personas_a_cargo < 2 || !mantenimiento) {
+            printf("La zona %d no es segura.\n", i + 1);
+        }
+    }
+}
+
+int main() {
+    Zona zonas[4];
+    Persona personas[MAX_PERSONAS];
+    int total_personas = 0;
+    int opcion;
+    do {
+        printf("Menú:\n");
+        printf("1- Definir capacidad de zonas\n");
+        printf("2- Crear Personas\n");
+        printf("3- Asignar Personas\n");
+        printf("4- Asignar zombies\n");
+        printf("5- Imprimir todas los detalles de las personas\n");
+        printf("6- Informar zonas que aún no son seguras\n");
+        printf("0- Salir\n");
+        printf("Opción: ");
+        scanf("%d", &opcion);
+        switch (opcion) {
+            case 1: definir_capacidad_zonas(zonas); break;
+            case 2: crear_persona(personas, &total_personas); break;
+            case 3: asignar_persona(zonas, personas, total_personas); break;
+            case 4: asignar_zombies(zonas); break;
+            case 5: imprimir_personas(personas, total_personas); break;
+            case 6: informar_zonas_no_seguras(zonas); break;
+        }
+    } while (opcion != 0);
     return 0;
-}
-
-void menu(Zona zonas[], Persona persona)
-{
-    int opciones = 0;
-    printf("Seleccione opcion:\n 1- Definir capacidad de zombies\n 2-Crear personas\n 3-Asignar personas\n 4-Asignar zombies\n 5-Imprimir todos los detalles\n 6-Informar zonas no seguras\n");
-    scanf("%d", &opciones);
-    getchar();
-
-    switch (opciones)
-    {
-    case 1:
-        definirZonas(zonas);
-        break;
-    case 2:
-        crearPersonas(persona, zonas);
-        break;
-    // case 3:
-    //     asignarPersonas();
-    //     break;
-    // case 4:
-    //     asignarZombies();
-    //     break;
-    // case 5:
-    //     imprimirDetalles();
-    //     break;
-    // case 6:
-    //     imprimirZonasNoSeguras();
-    //     break;
-
-    default:
-        break;
-    }
-}
-void definirZonas(Zona zonas[])
-{
-    for (int i = 0; i < MAXCANTZONA; i++)
-    {
-        printf("Defina capacidad de zombies de la ZONA %d: \n", i + 1);
-        scanf("%d", &zonas[i].capacidadZombies);
-        getchar();
-    }
-}
-void crearPersonas(Persona persona, Zona zonas[])
-{
-    int zonaElegida;
-    printf("en que zona quiere crear la persona: 0 / 1 / 2 / 3?\n");
-    scanf("%d", &zonaElegida);
-    persona.idZona = zonaElegida;
-    if (zonas[zonaElegida].contador == 4)
-    {
-        return printf("cantidad maxima de personas en zona %d\n", zonaElegida);
-    } else zonas[zonaElegida].contador++;
-
-    printf("Que nombre tendra esta persona?\n");
-    fgets(persona.nombre,50,stdin);
-    printf("Que apellido tendra esta persona?\n");
-    fgets(persona.apellido,50,stdin);
-
-
-    int rolElegido;
-    printf("Elija un rol 1- MANTENIMIENTO\n 2- SEGURIDAD\n 3- MENSAJERO\n");
-    scanf("%d", &rolElegido);
-    switch (rolElegido)
-    {
-    case 1:
-        persona.rol = MANTENIMIENTO;
-        break;
-    case 2:
-        persona.rol = SEGURIDAD;
-        break;
-    case 3:
-        persona.rol = MENSAJERO;
-        break;
-    default:
-        break;
-    }
-    if (zonas[zonaElegida].contador == 0 && zonas[zonaElegida].contador < 4)
-    {
-       zonas[zonaElegida].personas[zonas[zonaElegida].contador] = persona; //marron
-    } else zonas[zonaElegida].personas[zonas[zonaElegida].contador++] = persona;  
-// como creo las personas en el array de zonas... ? porque el array Zona zonas tiene adentro un maximo de 4 personas 
-// linea 46
-// o sea puedo hardcodearlo pero la idea es que chequee si llegue al maximo de personas que se puede
-
 }

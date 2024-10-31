@@ -15,8 +15,37 @@ v1. imprimir serie directamente sin guardar
 */
 #include <stdio.h>
 #include <stdlib.h>
+#define SIZE 10
+
+void inputBounds(int *low,int *upp){
+    do {
+        printf("enter your lower bound(not 0): ");
+        scanf("%d", low);
+    } while (*low == 0);
+    do {
+        printf("enter your upper bound: ");
+        scanf("%d", upp);
+    } while (*upp <= *low);
+}
 
 int main(){
-
+int lowerBound, upperBound;
+inputBounds(&lowerBound,&upperBound);
+int *set = (int*)calloc(SIZE, sizeof(int));
+int counter = 0;
+for (int i = 0; i < SIZE; i++)
+{
+    *(set + 0) = lowerBound;
+    if (*(set + i)*2 <= upperBound){
+        *(set + i + 1) = *(set + i)*2;
+    }
+}
+for (int i = 0; i < SIZE; i++)
+{
+    if (*(set + i) != 0)
+    {
+        printf("%d ", *(set + i));
+    }
+}
 return 0;
 }

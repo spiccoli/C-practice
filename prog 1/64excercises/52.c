@@ -8,8 +8,8 @@ Escribir un programa que:
 del jugador, su promedio y el equipo al que pertenece.
 Validar todo lo que sea necesario. La carga finaliza cuando el usuario no quiere
 ingresar más jugadores (para esto preguntar por S/N).
-
 */
+
 #include <stdio.h>
 #include <stdlib.h>
 

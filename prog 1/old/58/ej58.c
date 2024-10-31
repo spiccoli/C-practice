@@ -34,7 +34,7 @@ typedef struct
     double precioActual;
 }Producto;
 
-void cargarUno(Producto* prod){
+void cargarUno(Producto prod[]){
     printf("\n-------\n");
     printf("Ingrese el nombre del producto\n");
     scanf("%s", &prod->nombre);

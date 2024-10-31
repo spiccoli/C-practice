@@ -21,7 +21,7 @@ int main(int argc, char const *argv[]){
         printf("%d\n", **&pAge); // a la direc de age, le sacamos el valor
         printf("%p\n", &*&pAge); // direccion del puntero mismo
         printf("%p\n",*&*&pAge); // direccion age
-        
+        printf("%p", );
 
     }
     

@@ -38,7 +38,7 @@ void printBooks(Book *books, int booksCount){
 
 int main(){
 Book *books = NULL;
-int booksCount = 0;
+int booksCount = 0; 
 addBook(&books, &booksCount, "1984", 328);
 addBook(&books, &booksCount, "Brave New World", 268);
 printBooks(books, booksCount);

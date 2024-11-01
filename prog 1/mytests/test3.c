@@ -15,7 +15,7 @@ void cargarCotizaciones(float *arrCotizaciones, int size){
 
 void buscarMinimaCotizacion(float *arrCotizaciones, int size, float *menor){
     
-}
+} 
 
 int main(){
     

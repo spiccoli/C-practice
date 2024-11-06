@@ -36,14 +36,14 @@ void addMember(Member **arrMembers, int *mCount, int id, int age, char sport) {
     (*arrMembers)[*mCount].id = id;
     (*arrMembers)[*mCount].age = age;
     (*arrMembers)[*mCount].sport = sport;
-    (*mCount)++;
+    (*mCount)++; 
 }
 
 // Function to display all members
 void showAllMembers(const Member *members, int membersCount) {
     printf("Id\tAge\tSport\n");
     for (int i = 0; i < membersCount; i++) {
-        printf("%d\t%d\t%c\n", members[i].id, members[i].age, members[i].sport);
+        printf("%d\t%d\t%c\n", (members + i)->age, members[i].age, members[i].sport);
     }
 }
 

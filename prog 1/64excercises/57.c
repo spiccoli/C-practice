@@ -13,30 +13,40 @@ en MEMORIA DINÁMICA
 Utilizar aritmética de punteros (ambas formas p+i y p++)
 */
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>  // Para usar malloc
 
-int main()
-{
+int main() {
+    int num;
 
-    int entero;
-    do{
-        printf("entre numero entero > 0\n");
-        scanf("%d", &entero);
-    } while (entero <= 0);
+    // Pedir al usuario un número entero distinto de cero
+    do {
+        printf("Introduce un número entero (distinto de 0): ");
+        scanf("%d", &num);
+    } while (num == 0);  // Repetir si el número es 0
 
-    int *multiplos = (int *)calloc(10, sizeof(int));
-    if (multiplos == NULL){
-        printf("no sepudo asignar pa");
+    // Reservar memoria dinámica para 10 múltiplos
+    int* multiples = (int*)malloc(10 * sizeof(int));
+
+    // Verificar si la memoria fue asignada correctamente
+    if (multiples == NULL) {
+        printf("Error al asignar memoria.\n");
+        return 1; // Salir si no se pudo asignar memoria
     }
-    else{
-        *(multiplos + 0) = entero;
-        for (int i = 1; i < 10; i++){
-            *(multiplos + i) = *(multiplos + i - 1) + entero;
-        }
-        for (int i = 0; i < 10; i++){
-            printf("%d ", *(multiplos + i));
-        }
+
+    // Generar los 10 primeros múltiplos y almacenarlos en la memoria dinámica
+    for (int i = 0; i < 10; i++) {
+        *(multiples + i) = num * (i + 1);  // Aritmética de punteros (p+i)
     }
+
+    // Mostrar los múltiplos usando aritmética de punteros
+    printf("Los 10 primeros múltiplos de %d son:\n", num);
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", *(multiples + i));  // Aritmética de punteros (p++)
+    }
+
+    // Liberar la memoria asignada dinámicamente
+    free(multiples);
 
     return 0;
 }
+
